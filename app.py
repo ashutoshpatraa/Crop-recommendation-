@@ -1,5 +1,4 @@
 from flask import Flask, request, render_template
-import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -7,43 +6,41 @@ import joblib
 
 app = Flask(__name__)
 
-# Path to the CSV file
-csv_file_path = 'Crop_recommendation.csv'
+# Load or train the model
+def load_or_train_model():
+    try:
+        # Try to load the model from a file
+        model = joblib.load('crop_recommendation_model.pkl')
+    except FileNotFoundError:
+        # If the model file does not exist, train the model
+        # Load your dataset
+        data = pd.read_csv('crop_recommendation.csv')
+        
+        # Split the data into features and target
+        X = data.drop('label', axis=1)
+        y = data['label']
+        
+        # Split the data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        
+        # Train the model
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+        model.fit(X_train, y_train)
+        
+        # Save the model to a file
+        joblib.dump(model, 'crop_recommendation_model.pkl')
+    
+    return model
 
-def train_model():
-    # Read the entire dataset
-    data = pd.read_csv(csv_file_path)
+# Load or train the model
+model = load_or_train_model()
 
-    # Print the columns to check the names
-    print("Columns in the dataset:", data.columns)
-
-    # Features and target
-    X = data[['Nitrogen', 'phosphorus', 'potassium', 'temperature', 'humidity', 'ph', 'rainfall']]
-    y = data['label']
-
-    # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # Train the model
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
-
-    # Save the model
-    joblib.dump(model, 'crop_recommendation_model.pkl')
-
-# Train the model when the application starts
-train_model()
-
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    # Load the trained model
-    model = joblib.load('crop_recommendation_model.pkl')
-
-    # Get form data
     nitrogen = float(request.form['nitrogen'])
     phosphorus = float(request.form['phosphorus'])
     potassium = float(request.form['potassium'])
