@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Data Input</title>
+    <script>
+        function showAlert(prediction) {
+            if (prediction !== undefined) {
+                alert("Prediction: " + prediction);
+            }
+        }
+    </script>
+</head>
+<body onload="showAlert('{{ prediction }}')">
+    <h1>Crop Data Input Form</h1>
+    <form action="/submit" method="post">
+        <label for="nitrogen">Nitrogen:</label>
+        <input type="number" id="nitrogen" name="nitrogen" required><br><br>
+
+        <label for="phosphorus">Phosphorus:</label>
+        <input type="number" id="phosphorus" name="phosphorus" required><br><br>
+
+        <label for="potassium">Potassium:</label>
+        <input type="number" id="potassium" name="potassium" required><br><br>
+
+        <label for="temperature">Temperature:</label>
+        <input type="number" id="temperature" name="temperature" required><br><br>
+
+        <label for="humidity">Humidity:</label>
+        <input type="number" id="humidity" name="humidity" required><br><br>
+
+        <label for="ph">pH:</label>
+        <input type="number" id="ph" name="ph" required><br><br>
+
+        <label for="rainfall">Rainfall:</label>
+        <input type="number" id="rainfall" name="rainfall" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
