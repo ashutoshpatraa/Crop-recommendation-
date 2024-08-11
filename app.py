@@ -44,15 +44,15 @@ def train_model():
 def index():
     return render_template('index.html')
 
-@app.route('/submit', methods=['POST'])
-def submit():
-    nitrogen = request.form['nitrogen']
-    phosphorus = request.form['phosphorus']
-    potassium = request.form['potassium']
-    temperature = request.form['temperature']
-    humidity = request.form['humidity']
-    ph = request.form['ph']
-    rainfall = request.form['rainfall']
+@app.route('/recommend', methods=['POST'])
+def recommend():
+    nitrogen = float(request.form['nitrogen'])
+    phosphorus = float(request.form['phosphorus'])
+    potassium = float(request.form['potassium'])
+    temperature = float(request.form['temperature'])
+    humidity = float(request.form['humidity'])
+    ph = float(request.form['ph'])
+    rainfall = float(request.form['rainfall'])
 
     # Load the trained model and label encoder
     model = joblib.load('crop_model.pkl')
